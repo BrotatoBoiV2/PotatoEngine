@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PotatoEngine"
+version = "0.1.0"
+description="A flexible game engine created with pygame"
+readme = "README.md"
+license = { text = 'MIT' }
+authors = [
+    {name="Aaron Cassell", email="brotaoboi@gmail.com"}
+]
+requires-python = ">=3.7"
+dependencies = [
+    "pygame>=2.6.1"
+]
