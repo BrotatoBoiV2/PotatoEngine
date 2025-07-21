@@ -67,6 +67,7 @@ class Sprite:
         self.game.screen.blit(self.image, (self.x, self.y))
 
 
+<<<<<<< HEAD
 class Text:
     def __init__(self, gameInstance, text, rect, font, size, color=(0, 0, 0)):
         self.game = gameInstance
@@ -82,15 +83,34 @@ class Text:
 class Button(pg.Rect):
     def __init__(self, game, text, pos, size):
         self.game = game
+=======
+class Button(pg.Rect):
+    def __init__(self, game, text, pos, size):
+        self.game = game
+        self.type = text
+        self.font = pg.font.SysFont('Comic Sans MS', 32)
+        self.text = self.font.render(text.encode(), True, (0, 0, 0))
+        self.textRect = self.text.get_rect()
+        self.color = (255, 0, 0)
+>>>>>>> refs/remotes/origin/main
         
         super().__init__(pos[0], pos[1], size[0], size[1])
 
         self.center = pos
+<<<<<<< HEAD
         self.text = Text(game, text, self, 'Comic Sans MS', 32)
 
     def render(self):
         pg.draw.rect(self.game.screen, self.color, self)
         self.text.render()
+=======
+        self.textRect.center = self.center
+
+    def render(self):
+        pg.draw.rect(self.game.screen, self.color, self)
+
+        self.game.screen.blit(self.text, self.textRect)
+>>>>>>> refs/remotes/origin/main
 
     def update(self):
         mousePos = pg.mouse.get_pos()

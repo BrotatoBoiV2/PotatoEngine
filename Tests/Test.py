@@ -29,13 +29,20 @@ class Main:
     def __init__(self):
         # self.elf = Player(GAME, './Elf.png', (0, 0), (32, 32))
         self.test = pe.Button(GAME, "Test Button", (GAME.width//2, GAME.height//2), (100, 50))
+<<<<<<< HEAD
         self.text = pe.Text(GAME, "Words", (0, 0, 100, 50), 'Comic Sans MS', 32, (255, 0, 0))
+=======
+>>>>>>> refs/remotes/origin/main
 
         self.execute()
 
     def render(self):
+<<<<<<< HEAD
         # self.elf.render()self.game.screen.blit(self.text, self.textRect)
         self.text.render()
+=======
+        # self.elf.render()
+>>>>>>> refs/remotes/origin/main
         self.test.render()
         pass
 
