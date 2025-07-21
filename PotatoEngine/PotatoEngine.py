@@ -15,6 +15,9 @@ class Game:
 
         pg.display.set_caption(title)
 
+        self.width = width
+        self.height = height
+
         self.screen = pg.display.set_mode((width, height))
         self.clock = pg.time.Clock()
 
@@ -27,7 +30,8 @@ class Game:
                     self.isRunning = False
 
             keys = pg.key.get_pressed()
-            Input._update(keys)
+            mouse = pg.mouse.get_pressed()
+            Input._update(keys, mouse)
 
             if update:
                 update()
@@ -63,17 +67,53 @@ class Sprite:
         self.game.screen.blit(self.image, (self.x, self.y))
 
 
+class Text:
+    def __init__(self, gameInstance, text, rect, font, size, color=(0, 0, 0)):
+        self.game = gameInstance
+        self.font = pg.font.SysFont(font, size)
+        self.text = self.font.render(text.encode(), True, color)
+        self.rect = rect
+        self.color = color
+
+    def render(self):
+        self.game.screen.blit(self.text, self.rect)
+
+
+class Button(pg.Rect):
+    def __init__(self, game, text, pos, size):
+        self.game = game
+        
+        super().__init__(pos[0], pos[1], size[0], size[1])
+
+        self.center = pos
+        self.text = Text(game, text, self, 'Comic Sans MS', 32)
+
+    def render(self):
+        pg.draw.rect(self.game.screen, self.color, self)
+        self.text.render()
+
+    def update(self):
+        mousePos = pg.mouse.get_pos()
+
+        if self.collidepoint(mousePos):
+            self.color = (125, 0, 0)
+        else:
+            self.color = (255, 0, 0)
+
+
 ### ~~~ Handle the Inputs. ~~~ ###
 class Input:
-    key = None
+    keys = {}
+    mouseButtons = {}
 
     @staticmethod
-    def _update(keyStates):
+    def _update(keyStates, mouseStates):
         Input.keys = keyStates
+        Input.mouseButtons = mouseStates
 
 
 ### ~~ Check if a key was pressed. ~~ ###
-def key_pressed(key):
+def key_press(key):
     keys = {
         "left": pg.K_LEFT,
         "right": pg.K_RIGHT,
@@ -83,3 +123,14 @@ def key_pressed(key):
 
     return Input.keys[keys[key]]
 
+def mouse_click(button):
+    buttons = {
+        "left": 0,
+        "middle": 1,
+        "right": 2
+    }
+
+    return Input.mouseButtons[buttons[button]]
+    
+def mouse_pos():
+    return pg.mouse.get_pos()

@@ -28,16 +28,23 @@ class Player(pe.Sprite):
 class Main:
     def __init__(self):
         # self.elf = Player(GAME, './Elf.png', (0, 0), (32, 32))
+        self.test = pe.Button(GAME, "Test Button", (GAME.width//2, GAME.height//2), (100, 50))
+        self.text = pe.Text(GAME, "Words", (0, 0, 100, 50), 'Comic Sans MS', 32, (255, 0, 0))
 
         self.execute()
 
     def render(self):
-        # self.elf.render()
+        # self.elf.render()self.game.screen.blit(self.text, self.textRect)
+        self.text.render()
+        self.test.render()
         pass
 
     def update(self):
         # self.elf.update()
-        pass
+        self.test.update()
+
+        if self.test.collidepoint(pe.mouse_pos()) and pe.mouse_click("left"):
+            print("Start!")
 
     def execute(self):
         GAME.execute(self.update, self.render)
