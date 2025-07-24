@@ -49,27 +49,26 @@ class Game:
 
 
 ### ~~~ Sprite Class. ~~~ ###
-class Sprite:
-    def __init__(self, game, imagePath, x=0, y=0, width=32, height=32):
+class Sprite(pg.Rect):
+    def __init__(self, game, imagePath, x, y, width, height):
         image = pg.image.load(imagePath).convert_alpha()
 
-        self.image = self.image = pg.transform.scale(image, (width, height))
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        self.image = pg.transform.scale(image, (width, height))
         self.game = game
 
-    def get_rect(self):
-        return (self.x, self.y, self.width, self.height)
+        super().__init__(x, y, width, height)
+
+        self.center = (x, y)
 
     def render(self):
-        self.game.screen.blit(self.image, (self.x, self.y))
+        self.game.screen.blit(self.image, self)
+        # pg.draw.rect(self.game.screen, (255, 0, 0), self)
 
 
-<<<<<<< HEAD
 class Text:
     def __init__(self, gameInstance, text, rect, font, size, color=(0, 0, 0)):
+        text = str(text)
+
         self.game = gameInstance
         self.font = pg.font.SysFont(font, size)
         self.text = self.font.render(text.encode(), True, color)
@@ -83,34 +82,15 @@ class Text:
 class Button(pg.Rect):
     def __init__(self, game, text, pos, size):
         self.game = game
-=======
-class Button(pg.Rect):
-    def __init__(self, game, text, pos, size):
-        self.game = game
-        self.type = text
-        self.font = pg.font.SysFont('Comic Sans MS', 32)
-        self.text = self.font.render(text.encode(), True, (0, 0, 0))
-        self.textRect = self.text.get_rect()
-        self.color = (255, 0, 0)
->>>>>>> refs/remotes/origin/main
         
         super().__init__(pos[0], pos[1], size[0], size[1])
 
         self.center = pos
-<<<<<<< HEAD
         self.text = Text(game, text, self, 'Comic Sans MS', 32)
 
     def render(self):
         pg.draw.rect(self.game.screen, self.color, self)
         self.text.render()
-=======
-        self.textRect.center = self.center
-
-    def render(self):
-        pg.draw.rect(self.game.screen, self.color, self)
-
-        self.game.screen.blit(self.text, self.textRect)
->>>>>>> refs/remotes/origin/main
 
     def update(self):
         mousePos = pg.mouse.get_pos()
@@ -139,6 +119,10 @@ def key_press(key):
         "right": pg.K_RIGHT,
         "up": pg.K_UP,
         "down": pg.K_DOWN,
+        "w": pg.K_w,
+        "s": pg.K_s,
+        "i": pg.K_i,
+        "k": pg.K_k,
     }
 
     return Input.keys[keys[key]]
