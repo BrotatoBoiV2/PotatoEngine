@@ -28,10 +28,11 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     self.isRunning = False
+                if event.type == pg.KEYDOWN:
+                    Input._update()
 
-            keys = pg.key.get_pressed()
-            mouse = pg.mouse.get_pressed()
-            Input._update(keys, mouse)
+           
+            Input._update()
 
             if update:
                 update()
@@ -107,11 +108,10 @@ class Input:
     mouseButtons = {}
 
     @staticmethod
-    def _update(keyStates, mouseStates):
-        Input.keys = keyStates
-        Input.mouseButtons = mouseStates
-
-
+    def _update():
+        Input.keys = pg.key.get_pressed()
+        Input.mouseButtons = pg.mouse.get_pressed()
+        
 ### ~~ Check if a key was pressed. ~~ ###
 def key_press(key):
     keys = {
