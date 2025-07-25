@@ -66,6 +66,7 @@ class Sprite(pg.Rect):
         # pg.draw.rect(self.game.screen, (255, 0, 0), self)
 
 
+### ~~ Text Class. ~~~ ###
 class Text:
     def __init__(self, gameInstance, text, rect, font, size, color=(0, 0, 0)):
         text = str(text)
@@ -80,6 +81,7 @@ class Text:
         self.game.screen.blit(self.text, self.rect)
 
 
+### ~~~ Button Class. ~~~ ###
 class Button(pg.Rect):
     def __init__(self, game, text, pos, size):
         self.game = game
@@ -127,6 +129,7 @@ def key_press(key):
 
     return Input.keys[keys[key]]
 
+### ~~~ Check if a mouse button has been clicked. ~~~ ###
 def mouse_click(button):
     buttons = {
         "left": 0,
@@ -136,5 +139,6 @@ def mouse_click(button):
 
     return Input.mouseButtons[buttons[button]]
     
+### ~~~ Return the position of the mouse. ~~~ ###
 def mouse_pos():
     return pg.mouse.get_pos()
