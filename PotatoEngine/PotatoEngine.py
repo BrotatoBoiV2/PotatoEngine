@@ -2,7 +2,7 @@
 # Program Name: Game Engine.
 # Description: This is a library to make game writing a bit easier.
 # Date: July/08/2025
-# Version: 0.3-2025.07.11
+# Version: 0.1.2-2025.07.26
 
 
 import pygame as pg
@@ -11,28 +11,29 @@ import pygame as pg
 ### ~~~ Main Game Class. ~~~ ###
 class Game:
     def __init__(self, title="Game", width=800, height=600):
+        self.title = title
+        self.size = (width, height)
+
         pg.init()
 
-        pg.display.set_caption(title)
-
-        self.width = width
-        self.height = height
-
-        self.screen = pg.display.set_mode((width, height))
+        self.screen = pg.display.set_mode(self.size)
         self.clock = pg.time.Clock()
 
         self.isRunning = True
 
     def execute(self, update, render, fps=60):
+        pg.display.set_caption(self.title)
+        pg.display.set_mode(self.size)
+        
         while self.isRunning:
             for event in pg.event.get():
                 if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     self.isRunning = False
-                if event.type == pg.KEYDOWN:
-                    Input._update()
+                # if event.type in [pg.KEYDOWN, pg.KEYUP, pg.MOUSEBUTTONUP, pg.MOUSEBUTTONDOWN]:
+                #     Input._update()
 
            
-            Input._update()
+                Input.update()
 
             if update:
                 update()
@@ -46,20 +47,20 @@ class Game:
 
             self.clock.tick(fps)
 
-        pg.quit()
+        #pg.quit()
 
 
 ### ~~~ Sprite Class. ~~~ ###
 class Sprite(pg.Rect):
-    def __init__(self, game, imagePath, x, y, width, height):
+    def __init__(self, game, imagePath, pos, size):
         image = pg.image.load(imagePath).convert_alpha()
 
-        self.image = pg.transform.scale(image, (width, height))
+        self.image = pg.transform.scale(image, (size[0], size[1]))
         self.game = game
 
-        super().__init__(x, y, width, height)
+        super().__init__(pos[0], pos[1], size[0], size[1])
 
-        self.center = (x, y)
+        self.center = (pos[0], pos[1])
 
     def render(self):
         self.game.screen.blit(self.image, self)
@@ -74,7 +75,10 @@ class Text:
         self.game = gameInstance
         self.font = pg.font.SysFont(font, size)
         self.text = self.font.render(text.encode(), True, color)
-        self.rect = rect
+        if type(rect) == pg.Rect:
+            self.rect = rect
+        else:
+            self.rect = pg.Rect(rect[0], rect[1], rect[2], rect[3])
         self.color = color
 
     def render(self):
@@ -83,9 +87,10 @@ class Text:
 
 ### ~~~ Button Class. ~~~ ###
 class Button(pg.Rect):
-    def __init__(self, game, text, pos, size):
+    def __init__(self, game, text, pos, size, color=(255, 0, 0)):
         self.game = game
-        
+        self.color = color
+
         super().__init__(pos[0], pos[1], size[0], size[1])
 
         self.center = pos
@@ -95,10 +100,16 @@ class Button(pg.Rect):
         pg.draw.rect(self.game.screen, self.color, self)
         self.text.render()
 
-    def update(self):
-        mousePos = pg.mouse.get_pos()
+    def is_clicked(self):
+        if self.collidepoint(mouse_pos()):
+            if mouse_click("left"):
+                print("CLcickef")
+                return True
+            else:
+                return False
 
-        if self.collidepoint(mousePos):
+    def update(self):
+        if self.collidepoint(mouse_pos()):
             self.color = (125, 0, 0)
         else:
             self.color = (255, 0, 0)
@@ -109,8 +120,8 @@ class Input:
     keys = {}
     mouseButtons = {}
 
-    @staticmethod
-    def _update():
+    # @staticmethod
+    def update():
         Input.keys = pg.key.get_pressed()
         Input.mouseButtons = pg.mouse.get_pressed()
         
