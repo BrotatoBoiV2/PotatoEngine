@@ -26,14 +26,13 @@ class Game:
         pg.display.set_mode(self.size)
         
         while self.isRunning:
-            for event in pg.event.get():
+            events = pg.event.get()
+            for event in events:
                 if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     self.isRunning = False
-                # if event.type in [pg.KEYDOWN, pg.KEYUP, pg.MOUSEBUTTONUP, pg.MOUSEBUTTONDOWN]:
-                #     Input._update()
 
            
-                Input.update()
+                Input.update(event)
 
             if update:
                 update()
@@ -100,13 +99,7 @@ class Button(pg.Rect):
         pg.draw.rect(self.game.screen, self.color, self)
         self.text.render()
 
-    def is_clicked(self):
-        if self.collidepoint(mouse_pos()):
-            if mouse_click("left"):
-                print("CLcickef")
-                return True
-            else:
-                return False
+    def is_clicked(self):   return self.collidepoint(mouse_pos()) and mouse_click("left")
 
     def update(self):
         if self.collidepoint(mouse_pos()):
@@ -118,13 +111,26 @@ class Button(pg.Rect):
 ### ~~~ Handle the Inputs. ~~~ ###
 class Input:
     keys = {}
-    mouseButtons = {}
+    mouseButtons = (False, False, False)
+    mousePressed = {0:False, 1:False, 2:False}
+    mouseReleased = {0:False, 1:False, 2:False}
+    mouseClicked = {0:False, 1:False, 2:False}
 
-    # @staticmethod
-    def update():
+    @staticmethod
+    def update(event):
         Input.keys = pg.key.get_pressed()
         Input.mouseButtons = pg.mouse.get_pressed()
         
+        Input.mousePressed = {0:False, 1:False, 2:False}
+        Input.mouseReleased = {0:False, 1:False, 2:False}
+        Input.mouseClicked = {0:False, 1:False, 2:False}
+
+        if event.type == pg.MOUSEBUTTONDOWN:
+            Input.mousePressed[event.button-1] = True
+        if event.type == pg.MOUSEBUTTONUP:
+            Input.mouseReleased[event.button-1] = True
+            Input.mouseClicked[event.button-1] = True
+
 ### ~~ Check if a key was pressed. ~~ ###
 def key_press(key):
     keys = {
@@ -148,7 +154,7 @@ def mouse_click(button):
         "right": 2
     }
 
-    return Input.mouseButtons[buttons[button]]
+    return Input.mouseClicked[buttons[button]]
     
 ### ~~~ Return the position of the mouse. ~~~ ###
 def mouse_pos():

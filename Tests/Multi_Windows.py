@@ -38,6 +38,7 @@ class Main:
 
     def execute(self):
         while MENU.isRunning or GAME.isRunning:
+            print("Running")
             if MENU.isRunning:
                 print("Menu Render")
                 MENU.execute(self.menu_update, self.menu_render)
