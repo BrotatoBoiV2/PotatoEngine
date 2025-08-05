@@ -2,14 +2,14 @@
 # Program Name: Game Engine.
 # Description: This is a library to make game writing a bit easier.
 # Date: July/08/2025
-# Version: 0.1.2-2025.07.26
+# Version: 0.1.2-2025.08.05
 
 
 import pygame as pg
 
 
 ### ~~~ Main Game Class. ~~~ ###
-class Game:
+class Window:
     def __init__(self, title="Game", width=800, height=600):
         self.title = title
         self.size = (width, height)
@@ -30,7 +30,6 @@ class Game:
             for event in events:
                 if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     self.isRunning = False
-
            
                 Input.update(event)
 
@@ -51,27 +50,27 @@ class Game:
 
 ### ~~~ Sprite Class. ~~~ ###
 class Sprite(pg.Rect):
-    def __init__(self, game, imagePath, pos, size):
+    def __init__(self, window, imagePath, pos, size):
         image = pg.image.load(imagePath).convert_alpha()
 
         self.image = pg.transform.scale(image, (size[0], size[1]))
-        self.game = game
+        self.window = window
 
         super().__init__(pos[0], pos[1], size[0], size[1])
 
         self.center = (pos[0], pos[1])
 
     def render(self):
-        self.game.screen.blit(self.image, self)
+        self.window.screen.blit(self.image, self)
         # pg.draw.rect(self.game.screen, (255, 0, 0), self)
 
 
 ### ~~ Text Class. ~~~ ###
 class Text:
-    def __init__(self, gameInstance, text, rect, font, size, color=(0, 0, 0)):
+    def __init__(self, window, text, rect, font, fontSize, color=(0, 0, 0)):
         text = str(text)
 
-        self.game = gameInstance
+        self.window = window
         self.font = pg.font.SysFont(font, size)
         self.text = self.font.render(text.encode(), True, color)
         if type(rect) == pg.Rect:
@@ -81,22 +80,22 @@ class Text:
         self.color = color
 
     def render(self):
-        self.game.screen.blit(self.text, self.rect)
+        self.window.screen.blit(self.text, self.rect)
 
 
 ### ~~~ Button Class. ~~~ ###
 class Button(pg.Rect):
-    def __init__(self, game, text, pos, size, color=(255, 0, 0)):
-        self.game = game
+    def __init__(self, window, text, pos, size, color=(255, 0, 0)):
+        self.window = window
         self.color = color
 
         super().__init__(pos[0], pos[1], size[0], size[1])
 
         self.center = pos
-        self.text = Text(game, text, self, 'Comic Sans MS', 32)
+        self.text = Text(window, text, self, 'Comic Sans MS', 32)
 
     def render(self):
-        pg.draw.rect(self.game.screen, self.color, self)
+        pg.draw.rect(self.window.screen, self.color, self)
         self.text.render()
 
     def is_clicked(self):   return self.collidepoint(mouse_pos()) and mouse_click("left")
@@ -133,16 +132,14 @@ class Input:
 
 ### ~~ Check if a key was pressed. ~~ ###
 def key_press(key):
-    keys = {
-        "left": pg.K_LEFT,
-        "right": pg.K_RIGHT,
-        "up": pg.K_UP,
-        "down": pg.K_DOWN,
-        "w": pg.K_w,
-        "s": pg.K_s,
-        "i": pg.K_i,
-        "k": pg.K_k,
-    }
+    keys = { "left": pg.K_LEFT, "right": pg.K_RIGHT, "up": pg.K_UP,
+            "down": pg.K_DOWN, "a": pg.K_a, "b": pg.K_b, "c": pg.K_c,
+            "d": pg.K_d, "e": pg.K_e, "f": pg.K_f, "g": pg.K_g, 
+            "h": pg.K_h, "i": pg.K_i, "j": pg.K_j, "k": pg.K_k, 
+            "l": pg.K_l, "m": pg.K_m, "n": pg.K_n, "o": pg.K_o, 
+            "p": pg.K_p, "q": pg.K_q, "r": pg.K_r, "s": pg.K_s,
+            "t": pg.K_t, "u": pg.K_u, "v": pg.K_v, "w": pg.K_w, 
+            "x": pg.K_x, "y": pg.K_y, "z": pg.K_z }
 
     return Input.keys[keys[key]]
 
