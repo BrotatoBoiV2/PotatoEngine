@@ -1,15 +1,12 @@
 import PotatoEngine as pe
 print(pe.__version__)
 
-GAME = pe.Game("Game")
+GAME = pe.Window("Game")
 
 
 class Player(pe.Sprite):
-    def __init__(self, gameInstance, imagePath, pos, size):
-        self.sprite = pe.Sprite(gameInstance, imagePath, pos[0], pos[1], size[0], size[1])
-        #self.rect = self.sprite.get_rect()
-
-        super().__init__(gameInstance, imagePath, pos[0], pos[1], size[0], size[1])
+    def __init__(self, windowInstance, imagePath, pos, size):
+        super().__init__(windowInstance, imagePath, pos, size)
 
     def update(self):
         if pe.key_press("left"):
@@ -28,7 +25,7 @@ class Player(pe.Sprite):
 class Main:
     def __init__(self):
         self.elf = Player(GAME, './Tests/Elf.png', (0, 0), (32, 32))
-        self.test = pe.Button(GAME, "Test Button", (GAME.width//2, GAME.height//2), (100, 50))
+        self.test = pe.Button(GAME, "Test Button", (GAME.size[0]//2, GAME.size[1]//2), (100, 50))
 
         self.text = pe.Text(GAME, "Words", (0, 0, 100, 50), 'Comic Sans MS', 32, (255, 0, 0))
 

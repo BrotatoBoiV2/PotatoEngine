@@ -1,7 +1,7 @@
 import PotatoEngine as pe
 
-GAME = pe.Game("Game")
-MENU = pe.Game("Menu", 400, 300)
+GAME = pe.Window("Game")
+MENU = pe.Window("Menu", 400, 300)
 
 
 class Main:
